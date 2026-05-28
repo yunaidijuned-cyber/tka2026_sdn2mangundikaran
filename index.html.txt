@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Hasil TKA 2026 - SDN 2 Mangundikaran</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @media print {
+            body * { visibility: hidden; }
+            #resultSection, #resultSection * { visibility: visible; }
+            #resultSection { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col justify-between">
+
+    <header class="bg-blue-700 text-white shadow-md no-print">
+        <div class="container mx-auto px-4 py-6 text-center">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-wide">SDN 2 MANGUNDIKARAN NGANJUK</h1>
+            <p class="text-blue-100 text-sm md:text-base mt-1">Aplikasi Online Pengumuman Hasil Tes Kemampuan Akademik (TKA) 2026</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-2xl flex-grow">
+        
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 no-print">
+            <h2 class="text-xl font-bold text-slate-800 mb-6 text-center">Cek Hasil TKA Siswa</h2>
+            
+            <form id="searchForm" class="space-y-4">
+                <div>
+                    <label for="nisn" class="block text-sm font-semibold text-slate-700 mb-1">NISN Siswa</label>
+                    <input type="number" id="nisn" required placeholder="Masukkan 10 digit NISN" 
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 transition">
+                </div>
+
+                <div>
+                    <label for="dob" class="block text-sm font-semibold text-slate-700 mb-1">Tanggal Lahir</label>
+                    <input type="date" id="dob" required 
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 transition">
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 cursor-pointer text-center block">
+                    Lihat Hasil Ujian
+                </button>
+            </form>
+        </div>
+
+        <div id="notFoundAlert" class="hidden mt-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center no-print">
+            <p class="font-medium">Data tidak ditemukan!</p>
+            <p class="text-sm mt-0.5">Pastikan NISN dan Tanggal Lahir yang dimasukkan sudah benar.</p>
+        </div>
+
+        <div id="resultSection" class="hidden mt-8 bg-white p-6 md:p-8 rounded-2xl shadow-md border-2 border-blue-100 print:border-none print:shadow-none">
+            <div class="text-center border-b-2 border-slate-800 pb-4 mb-6">
+                <h2 class="text-xl font-extrabold text-slate-900 tracking-wide uppercase">SDN 2 MANGUNDIKARAN NGANJUK</h2>
+                <p class="text-xs text-slate-600 mt-0.5">Kabupaten Nganjuk, Jawa Timur</p>
+                <h3 class="text-md font-bold text-slate-800 mt-3 uppercase tracking-wide bg-slate-100 py-1 inline-block px-4 rounded">
+                    Surat Keterangan Hasil Tes Kemampuan Akademik (TKA) 2026
+                </h3>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="text-sm font-bold text-blue-700 uppercase tracking-wider mb-3 print:text-slate-800">Biodata Peserta</h4>
+                <div class="grid grid-cols-3 gap-y-2 text-sm text-slate-700">
+                    <div class="font-medium text-slate-500">Nama Lengkap</div>
+                    <div class="col-span-2 font-bold text-slate-900">: <span id="resNama"></span></div>
+                    
+                    <div class="font-medium text-slate-500">NISN</div>
+                    <div class="col-span-2 font-semibold">: <span id="resNisn"></span></div>
+                    
+                    <div class="font-medium text-slate-500">TTL</div>
+                    <div class="col-span-2">: <span id="resTtl"></span></div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="text-sm font-bold text-blue-700 uppercase tracking-wider mb-3 print:text-slate-800">Capaian Nilai Ujian</h4>
+                <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold">
+                                <th class="p-3">Mata Pelajaran</th>
+                                <th class="p-3 text-center">Nilai & Predikat</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-800">
+                            <tr>
+                                <td class="p-3 font-medium">Matematika</td>
+                                <td id="resMat" class="p-3 text-center font-bold"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">Bahasa Indonesia</td>
+                                <td id="resBin" class="p-3 text-center font-bold"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-400 italic text-center mt-8 print:text-slate-500">
+                *Dokumen ini sah dikeluarkan secara sistem oleh portal resmi SDN 2 Mangundikaran Nganjuk Tahun 2026.
+            </p>
+
+            <div class="mt-6 flex justify-end no-print">
+                <button onclick="window.print()" 
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-5 rounded-xl shadow transition cursor-pointer flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    Cetak Hasil (PDF)
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 text-xs py-4 text-center border-t border-slate-700 no-print">
+        &copy; 2026 SDN 2 Mangundikaran Nganjuk. All Rights Reserved.
+    </footer>
+
+    <script>
+        // Data Siswa sesuai format yang diberikan (Tanggal Lahir telah dikonversi ke YYYY-MM-DD agar sinkron dengan input date browser)
+        const dataSiswa = [
+            { nisn: "0137691891", nama: "SANTIKA AHMADYANTI", ttl: "NGANJUK, 18 Juni 2013", tgl: "2013-06-18", mtg: "56.67 (Baik)", bin: "73.33 (Memadai)" },
+            { nisn: "0138195556", nama: "FAIZ IRFAN FATHURRAHMAN", ttl: "NGANJUK, 18 Juni 2013", tgl: "2013-06-18", mtg: "36.67 (Memadai)", bin: "76.67 (Baik)" },
+            { nisn: "0147032360", nama: "AINI DINIYAH HAFIZAH", ttl: "NGANJUK, 26 Januari 2014", tgl: "2014-01-26", mtg: "33.33 (Memadai)", bin: "76.67 (Baik)" },
+            { nisn: "0139539296", nama: "MUHAMMAD HAFFAFA FAAIZ AMRULLOH", ttl: "NGANJUK, 25 Agustus 2013", tgl: "2013-08-25", mtg: "70.00 (Baik)", bin: "90.00 (Baik)" },
+            { nisn: "0139521885", nama: "ABIMA NURINDRA SAPUTRA", ttl: "NGANJUK, 26 Juli 2013", tgl: "2013-07-26", mtg: "46.67 (Memadai)", bin: "43.33 (Kurang)" },
+            { nisn: "3131486577", nama: "MUHAMMAD FADHIL AMRULLAH", ttl: "NGANJUK, 10 April 2013", tgl: "2013-04-10", mtg: "43.33 (Memadai)", bin: "63.33 (Memadai)" },
+            { nisn: "0135365873", nama: "ACHMAD AHSAN AL MUFASHIH", ttl: "NGANJUK, 14 Juli 2013", tgl: "2013-07-14", mtg: "40.00 (Memadai)", bin: "90.00 (Baik)" },
+            { nisn: "0137203811", nama: "FAHMI NUR ALIF", ttl: "MADIUN, 5 Mei 2013", tgl: "2013-05-05", mtg: "80.00 (Baik)", bin: "63.33 (Memadai)" },
+            { nisn: "0149061161", nama: "FARHAN AJI PRAMANA", ttl: "NGANJUK, 14 April 2014", tgl: "2014-04-14", mtg: "33.33 (Memadai)", bin: "56.67 (Memadai)" },
+            { nisn: "3134069049", nama: "AURORA NUR AQYLA MEILANI", ttl: "NGANJUK, 15 Desember 2013", tgl: "2013-12-15", mtg: "46.67 (Memadai)", bin: "40.00 (Kurang)" },
+            { nisn: "0131973448", nama: "ELYSA CAHYA NINGRUM", ttl: "NGANJUK, 13 Juni 2013", tgl: "2013-06-13", mtg: "50.00 (Memadai)", bin: "83.33 (Baik)" },
+            { nisn: "0142019299", nama: "FAYYOLA NADHIFA QUINN ADMAJA", ttl: "NGANJUK, 15 Maret 2014", tgl: "2014-03-15", mtg: "40.00 (Memadai)", bin: "70.00 (Memadai)" },
+            { nisn: "0136650204", nama: "ELMIRA KANZA RUSYDA HABIBAH", ttl: "NGANJUK, 18 September 2013", tgl: "2013-09-18", mtg: "53.33 (Memadai)", bin: "73.33 (Memadai)" },
+            { nisn: "0139564070", nama: "SANDHILLA SYAHYA KUSUMA", ttl: "NGANJUK, 25 Februari 2013", tgl: "2013-02-25", mtg: "46.67 (Memadai)", bin: "43.33 (Kurang)" },
+            { nisn: "0132174336", nama: "DZAWIN NAILATUL KAROMAH", ttl: "NGANJUK, 5 Agustus 2013", tgl: "2013-08-05", mtg: "46.67 (Memadai)", bin: "66.67 (Memadai)" },
+            { nisn: "0138285006", nama: "LANGGENG DWI PRAYOGA", ttl: "NGANJUK, 3 Maret 2013", tgl: "2013-03-03", mtg: "40.00 (Memadai)", bin: "43.33 (Kurang)" },
+            { nisn: "0141068464", nama: "AQQILA ZANEITA MAHARANI", ttl: "NGANJUK, 19 Januari 2014", tgl: "2014-01-19", mtg: "43.33 (Memadai)", bin: "90.00 (Baik)" },
+            { nisn: "0143015493", nama: "MUHAMMAD ZENREFI ALDI PRANATA PAMKAS", ttl: "NGANJUK, 4 Maret 2014", tgl: "2014-03-04", mtg: "33.33 (Memadai)", bin: "40.00 (Kurang)" },
+            { nisn: "0134962149", nama: "ALYONA SEPTIAN MAHARANI", ttl: "NGANJUK, 17 November 2013", tgl: "2013-11-17", mtg: "60.00 (Baik)", bin: "63.33 (Memadai)" },
+            { nisn: "3145116237", nama: "FICKO JAVIER IBNU AL WAN", ttl: "NGANJUK, 29 Januari 2014", tgl: "2014-01-29", mtg: "30.00 (Kurang)", bin: "60.00 (Memadai)" },
+            { nisn: "0134237010", nama: "GABRIYAN ALFARO", ttl: "Surabaya, 2 Maret 2013", tgl: "2013-03-02", mtg: "43.33 (Memadai)", bin: "76.67 (Baik)" },
+            { nisn: "0133423640", nama: "YUNIAR DWI PRABANINGTYAS UTOMO", ttl: "NGANJUK, 27 Juni 2013", tgl: "2013-06-27", mtg: "20.00 (Kurang)", bin: "30.00 (Kurang)" },
+            { nisn: "0136463674", nama: "NAURA AQILLA DINATA", ttl: "NGANJUK, 20 Oktober 2013", tgl: "2013-10-20", mtg: "20.00 (Kurang)", bin: "73.33 (Memadai)" }
+        ];
+
+        const searchForm = document.getElementById('searchForm');
+        const notFoundAlert = document.getElementById('notFoundAlert');
+        const resultSection = document.getElementById('resultSection');
+
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const inputNisn = document.getElementById('nisn').value.trim();
+            const inputDob = document.getElementById('dob').value;
+
+            // Cari data kecocokan NISN dan Tanggal Lahir
+            const siswa = dataSiswa.find(s => s.nisn === inputNisn && s.tgl === inputDob);
+
+            if (siswa) {
+                // Sembunyikan pesan error jika sebelumnya muncul
+                notFoundAlert.classList.add('hidden');
+                
+                // Isi konten hasil
+                document.getElementById('resNama').innerText = siswa.nama;
+                document.getElementById('resNisn').innerText = siswa.nisn;
+                document.getElementById('resTtl').innerText = siswa.ttl;
+                document.getElementById('resMat').innerText = siswa.mtg;
+                document.getElementById('resBin').innerText = siswa.bin;
+
+                // Tampilkan section hasil
+                resultSection.classList.remove('hidden');
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                // Sembunyikan hasil lama dan tampilkan pesan error
+                resultSection.classList.add('hidden');
+                notFoundAlert.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
